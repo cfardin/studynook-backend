@@ -12,6 +12,22 @@ const client = new MongoClient(process.env.MONGODB_URI);
 async function connectToMongoDB() {
   try {
     await client.connect();
+
+    const db = client.db("studynook");
+    const roomCollection = db.collection("rooms");
+
+
+    // api for adding rooms
+    app.post("/rooms", async(req, res) =>{
+      const newRoomData = req.body;
+      const result = await roomCollection.insertOne(newRoomData);
+
+      res.json(result);
+    })
+
+
+
+
     console.log("Connected to MongoDB");
     return client;
   } catch (err) {
