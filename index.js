@@ -3,8 +3,12 @@ dns.setServers(["8.8.8.8", "8.8.4.4"]);
 
 const express = require('express');
 const { MongoClient } = require('mongodb');
+const cors = require("cors");
 require('dotenv').config();
 const app = express();
+
+app.use(cors());
+app.use(express.json());
 
 const PORT = process.env.PORT || 5000;
 const client = new MongoClient(process.env.MONGODB_URI);
@@ -16,14 +20,24 @@ async function connectToMongoDB() {
     const db = client.db("studynook");
     const roomCollection = db.collection("rooms");
 
+    // api for getting all rooms 
+    app.get('/rooms', async(req, res) =>{
+      const result = await roomCollection.find().toArray();
+      res.json(result);
+    })
+
 
     // api for adding rooms
     app.post("/rooms", async(req, res) =>{
       const newRoomData = req.body;
+      console.log(newRoomData);
       const result = await roomCollection.insertOne(newRoomData);
 
       res.json(result);
     })
+
+
+
 
 
 
