@@ -27,6 +27,15 @@ async function connectToMongoDB() {
     })
 
 
+    // api for getting room by user emails 
+    app.get('/rooms/:email', async(req, res) => {
+      const {email} = req.params;
+      const result = await roomCollection.find({ "host.email" : email }).toArray();
+
+      res.json(result);
+    })
+
+
     // api for adding rooms
     app.post("/rooms", async(req, res) =>{
       const newRoomData = req.body;
