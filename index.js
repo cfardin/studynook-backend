@@ -35,6 +35,14 @@ async function connectToMongoDB() {
       res.json(result);
     })
 
+    app.get('/rooms/:id', async(req, res) =>{
+      const { id } = req.params;
+      const result = await roomCollection.find(
+        {_id : new ObjectId(id)}
+      )
+      res.json(result);
+    })
+
 
     // api for adding rooms
     app.post("/rooms", async(req, res) =>{
