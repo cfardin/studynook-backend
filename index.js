@@ -47,9 +47,16 @@ async function connectToMongoDB() {
       const newRoomData = req.body;
       console.log(newRoomData);
       const result = await roomCollection.insertOne(newRoomData);
-
       res.json(result);
-    })
+    });
+
+    // api for deleting rooms
+    app.delete(`/rooms/:id`, async(req, res) =>{
+      const {id} = req.params;
+      const result = await roomCollection.deleteOne({_id : new ObjectId(id)});
+    });
+
+    
 
 
 
