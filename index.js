@@ -2,7 +2,7 @@ const dns = require("node:dns");
 dns.setServers(["8.8.8.8", "8.8.4.4"]);
 
 const express = require('express');
-const { MongoClient } = require('mongodb');
+const { MongoClient, ObjectId } = require('mongodb');
 const cors = require("cors");
 require('dotenv').config();
 const app = express();
@@ -28,20 +28,18 @@ async function connectToMongoDB() {
 
 
     // api for getting room by user emails 
-    app.get('/rooms/:email', async(req, res) => {
+    app.get('/rooms/host/:email', async(req, res) => {
       const {email} = req.params;
       const result = await roomCollection.find({ "host.email" : email }).toArray();
 
       res.json(result);
-    })
+    });
 
-    app.get('/rooms/:id', async(req, res) =>{
+    app.get(`/rooms/:id`, async(req, res) =>{
       const { id } = req.params;
-      const result = await roomCollection.find(
-        {_id : new ObjectId(id)}
-      )
+      const result = await roomCollection.findOne({_id : new ObjectId(id)});
       res.json(result);
-    })
+    });
 
 
     // api for adding rooms
